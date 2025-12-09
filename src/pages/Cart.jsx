@@ -79,11 +79,51 @@ const Cart = () => {
                                     />
                                     <div className="ml-6">
                                         <div className="text-lg font-bold text-gray-900">{item.name}</div>
-                                        <div className="text-sm text-gray-500 mt-1">${Number(item.price).toFixed(2)} x {item.quantity}</div>
+                                        <div className="text-sm text-gray-500 mt-1">${Number(item.price).toFixed(2)}</div>
                                     </div>
                                 </div>
-                                <div className="flex items-center w-full sm:w-auto justify-between sm:justify-end">
-                                    <span className="text-xl font-bold text-indigo-600 mr-8">
+                                <div className="flex items-center w-full sm:w-auto justify-between sm:justify-end gap-4">
+                                    {/* Quantity Controls */}
+                                    <div className="flex items-center border border-gray-300 rounded-lg">
+                                        <button
+                                            onClick={async () => {
+                                                const newQty = item.quantity - 1;
+                                                if (newQty < 1) {
+                                                    removeFromCart(item.id);
+                                                } else {
+                                                    try {
+                                                        await axios.put(`http://localhost:5001/api/cart/${item.id}`, {
+                                                            quantity: newQty
+                                                        });
+                                                        fetchCart();
+                                                    } catch (error) {
+                                                        console.error('Error updating quantity', error);
+                                                    }
+                                                }
+                                            }}
+                                            className="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-l-lg"
+                                        >
+                                            -
+                                        </button>
+                                        <span className="px-4 py-1 text-gray-900 font-medium">{item.quantity}</span>
+                                        <button
+                                            onClick={async () => {
+                                                try {
+                                                    await axios.put(`http://localhost:5001/api/cart/${item.id}`, {
+                                                        quantity: item.quantity + 1
+                                                    });
+                                                    fetchCart();
+                                                } catch (error) {
+                                                    console.error('Error updating quantity', error);
+                                                }
+                                            }}
+                                            className="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-r-lg"
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+
+                                    <span className="text-xl font-bold text-indigo-600 min-w-[80px] text-right">
                                         ${(Number(item.price) * item.quantity).toFixed(2)}
                                     </span>
                                     <button
