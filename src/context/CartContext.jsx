@@ -1,17 +1,18 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from './AuthContext';
+import { API_URL } from '../config';
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-    const { user } = useContext(AuthContext);
     const [cartItems, setCartItems] = useState([]);
+    const { user } = useContext(AuthContext);
 
     const fetchCart = async () => {
         if (user) {
             try {
-                const res = await axios.get('http://localhost:5001/api/cart');
+                const res = await axios.get(`${API_URL}/api/cart`);
                 setCartItems(res.data);
             } catch (error) {
                 console.error("Error fetching cart", error);
@@ -27,33 +28,36 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = async (foodId, quantity = 1) => {
         if (!user) {
-            alert("Please login to add to cart");
+            alert('Please login to add items to cart');
             return;
         }
+
         try {
-            await axios.post('http://localhost:5001/api/cart', { foodId, quantity });
-            await fetchCart(); // Refresh cart
+            await axios.post(`${API_URL}/api/cart`, { foodId, quantity });
+            fetchCart();
+            alert('Item added to cart');
         } catch (error) {
-            console.error(error);
-            alert("Failed to add to cart");
+            console.error("Error adding to cart", error);
+            alert('Failed to add item to cart');
         }
     };
 
     const removeFromCart = async (cartItemId) => {
         try {
-            await axios.delete(`http://localhost:5001/api/cart/${cartItemId}`);
-            await fetchCart();
+            await axios.delete(`${API_URL}/api/cart/${cartItemId}`);
+            fetchCart();
+            alert('Failed to remove item');
         } catch (error) {
-            console.error(error);
+            console.error("Error removing from cart", error);
         }
     };
 
     const clearCart = async () => {
         try {
-            await axios.delete('http://localhost:5001/api/cart');
+            await axios.delete(`${API_URL}/api/cart`);
             setCartItems([]);
         } catch (error) {
-            console.error(error);
+            console.error("Error clearing cart", error);
         }
     };
 

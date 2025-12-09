@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import FoodCard from '../components/FoodCard';
 import { AuthContext } from '../context/AuthContext';
+import { API_URL } from '../config';
 
 const Menu = () => {
     const [foods, setFoods] = useState([]);
@@ -17,7 +18,7 @@ const Menu = () => {
     useEffect(() => {
         const fetchFoods = async () => {
             try {
-                let url = 'http://localhost:5001/api/foods';
+                let url = `${API_URL}/api/foods`;
                 const params = {
                     page: currentPage,
                     limit: 12,
@@ -125,8 +126,8 @@ const Menu = () => {
                                         key={index + 1}
                                         onClick={() => handlePageChange(index + 1)}
                                         className={`px-4 py-2 border rounded-md ${currentPage === index + 1
-                                                ? 'bg-indigo-600 text-white border-indigo-600'
-                                                : 'border-gray-300 hover:bg-gray-50'
+                                            ? 'bg-indigo-600 text-white border-indigo-600'
+                                            : 'border-gray-300 hover:bg-gray-50'
                                             }`}
                                     >
                                         {index + 1}

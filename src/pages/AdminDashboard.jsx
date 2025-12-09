@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { API_URL } from '../config';
 
 const AdminDashboard = () => {
     const { user } = useContext(AuthContext);
@@ -15,7 +16,7 @@ const AdminDashboard = () => {
 
     const fetchFoods = async () => {
         try {
-            const res = await axios.get('http://localhost:5001/api/foods');
+            const res = await axios.get(`${API_URL}/api/foods`);
             setFoods(res.data);
         } catch (error) {
             console.error(error);
@@ -25,7 +26,7 @@ const AdminDashboard = () => {
     const handleCreateFood = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5001/api/foods', newFood);
+            await axios.post(`${API_URL}/api/foods`, newFood);
             setNewFood({ name: '', description: '', price: '', image_url: '', category: '' });
             fetchFoods();
         } catch (error) {
@@ -37,7 +38,7 @@ const AdminDashboard = () => {
     const handleDeleteFood = async (id) => {
         if (window.confirm('Are you sure?')) {
             try {
-                await axios.delete(`http://localhost:5001/api/foods/${id}`);
+                await axios.delete(`${API_URL}/api/foods/${id}`);
                 fetchFoods();
             } catch (error) {
                 console.error(error);

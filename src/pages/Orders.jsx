@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { API_URL } from '../config';
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
@@ -22,7 +23,7 @@ const Orders = () => {
             };
             if (statusFilter !== 'All') params.status = statusFilter;
 
-            const res = await axios.get('http://localhost:5001/api/orders', { params });
+            const res = await axios.get(`${API_URL}/api/orders`, { params });
             setOrders(res.data.orders || res.data);
             setPagination(res.data.pagination);
             setLoading(false);
@@ -42,7 +43,7 @@ const Orders = () => {
         if (!window.confirm('Are you sure you want to delete this order?')) return;
 
         try {
-            await axios.delete(`http://localhost:5001/api/orders/${orderId}`);
+            await axios.delete(`${API_URL}/api/orders/${orderId}`);
             alert('Order deleted successfully');
             fetchOrders(); // Refresh the list
         } catch (error) {
@@ -157,8 +158,8 @@ const Orders = () => {
                                 key={index + 1}
                                 onClick={() => handlePageChange(index + 1)}
                                 className={`px-4 py-2 border rounded-md ${currentPage === index + 1
-                                        ? 'bg-indigo-600 text-white border-indigo-600'
-                                        : 'border-gray-300 hover:bg-gray-50'
+                                    ? 'bg-indigo-600 text-white border-indigo-600'
+                                    : 'border-gray-300 hover:bg-gray-50'
                                     }`}
                             >
                                 {index + 1}

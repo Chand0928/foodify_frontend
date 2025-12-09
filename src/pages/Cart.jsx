@@ -4,6 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { Trash2, ArrowRight } from 'lucide-react';
+import { API_URL } from '../config';
 
 const Cart = () => {
     const { cartItems, removeFromCart, clearCart, fetchCart } = useContext(CartContext);
@@ -27,7 +28,7 @@ const Cart = () => {
                 price: item.price
             }));
 
-            const res = await axios.post('http://localhost:5001/api/orders', {
+            const res = await axios.post(`${API_URL}/api/orders`, {
                 items,
                 totalAmount: total
             });
@@ -92,7 +93,7 @@ const Cart = () => {
                                                     removeFromCart(item.id);
                                                 } else {
                                                     try {
-                                                        await axios.put(`http://localhost:5001/api/cart/${item.id}`, {
+                                                        await axios.put(`${API_URL}/api/cart/${item.id}`, {
                                                             quantity: newQty
                                                         });
                                                         fetchCart();
@@ -109,7 +110,7 @@ const Cart = () => {
                                         <button
                                             onClick={async () => {
                                                 try {
-                                                    await axios.put(`http://localhost:5001/api/cart/${item.id}`, {
+                                                    await axios.put(`${API_URL}/api/cart/${item.id}`, {
                                                         quantity: item.quantity + 1
                                                     });
                                                     fetchCart();
